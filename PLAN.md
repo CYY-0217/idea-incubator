@@ -55,7 +55,8 @@
 - [x] P06 queries 组二：addIdeaVersion(事务 v_no+1)/addFollowup/addAttachment/setTags。自查 tsx v_no=1。
 - [x] P07 lib/time.ts 相对时间工具。自查 tsx 三例。
 - [x] P08 IdeaCard 卡片组件（类型徽章/五态色条/截断/相对时间）。自查 tsc+假数据。
-- [ ] P09 首页卡片流 + 状态筛选 chips（?status= 驱动）。自查浏览器走查。
+- [x] P09 首页卡片流 + 状态筛选 chips（?status= 驱动）。自查浏览器走查。
+      备注：Playwright 点击自动化超时（IAB 环境问题），筛选改用 URL 直达 + DOM 快照验证，功能正常。
 - [ ] P10 输入区：三模式 chips + textarea + server action + 空状态 + sonner。自查两模式各建一条。
 - [ ] P11 详情页 /idea/[id]：原文+元信息+附件占位，notFound。自查 404。
 - [ ] P12 版本时间线组件（九字段分块+双分徽章）。自查假数据走查。
