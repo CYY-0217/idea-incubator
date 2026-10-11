@@ -4,16 +4,20 @@
 
 定位：先做给自己用的 PC 端 web 应用；后续朝黑客松 demo 和大创选题方向演化（见 Roadmap）。
 
-## 现状（V0）
+## 现状（V1.1）
 
 已实现：
 
-- 收件箱：三种输入形态（关键词 / 想法 / 对话粘贴），状态筛选卡片流
+- 收件箱：三种输入形态（关键词 / 想法 / 对话粘贴），状态筛选 + 标签筛选卡片流
+- **截图/网页剪裁**：收件箱 ⌘V 直接粘贴截图（或选文件），随想法一起入库；详情页可继续补图
+- **标签**：详情页增删标签，首页按标签筛选，卡片展示
 - 详情页：原文、五态状态流转（种子 → 展开中 → 推进中 → 落地，搁置旁路）
 - **演化时间线**：每次展开是 v_n 节点，九字段分块展示，双评分徽章，origin 标记（ZCode / DeepSeek / 手动）
+- **AI 追问回流**：AI 出 3 个苏格拉底追问 → 你作答 → 回答融合成 v(n+1) 新版本（DeepSeek 自动融合，无 key 时走 ZCode 粘贴通道）
+- **周回顾** `/review`：本周统计、沉睡想法提醒、相似想法配对（本地二元组 Jaccard，零 token）
 - 展开引擎：`pnpm idea:expand <id>`，DeepSeek API 与 ZCode 代跑双通道
 
-未实现（明晚盘子）：截图/网页剪裁上传、标签、AI 追问、周回顾、手机端 PWA、部署。
+未实现：多用户/部署/手机端 PWA、语音输入（手动转文字即可）。
 
 ## 技术栈
 
@@ -57,20 +61,26 @@ printf '%s' '{"restated":"…","problem":"…","output_form":"…","alternatives
 ```
 src/
   app/
-    page.tsx              # 收件箱：输入区 + 状态筛选 + 卡片流（实时拉库）
-    idea/[id]/page.tsx    # 详情：原文、状态切换、演化时间线、附件占位
-    actions.ts            # server actions（createIdeaAction / updateStatusAction）
-  components/             # IdeaCard、IdeaInput、StatusSwitcher、VersionTimeline
+    page.tsx              # 收件箱：输入区 + 状态/标签筛选 + 卡片流（实时拉库）
+    idea/[id]/page.tsx    # 详情：原文、标签、状态、时间线、AI 追问、附件
+    review/page.tsx       # 周回顾：统计 + 沉睡想法 + 相似配对
+    actions.ts            # server actions（建卡/状态/标签/附件/追问/回流）
+    api/upload            # POST 图片落盘 data/uploads/
+    api/attachments/[id]  # GET 附件流（按扩展名回 content-type）
+  components/             # IdeaCard、IdeaInput、StatusSwitcher、VersionTimeline、
+                          # TagEditor、AttachmentPanel、FollowupPanel
   lib/
     db/                   # drizzle client 单例 + schema（5 张表）
-    queries.ts            # 查询/写入层（版本号在事务内 max+1）
+    queries.ts            # 查询/写入层（版本号在事务内 max+1、周回顾统计）
     idea-service.ts       # 输入校验（action 与脚本共用）
     expand-schema.ts      # 九字段 zod schema
+    prompt.ts             # 展开/追问/融合三套 prompt
+    ai.ts                 # DeepSeek 通道助手（无 key 时调用方走 ZCode 路径）
     time.ts               # 相对时间
 scripts/
-  prompt.ts               # SYSTEM_PROMPT + keyword/paste/text 三分支指令
-  expand.ts               # 展开引擎（DeepSeek API / stdin 双通道）
+  expand.ts               # 展开引擎 CLI（DeepSeek API / stdin 双通道）
 drizzle/                  # 迁移文件
+data/uploads/             # 本地附件（gitignored）
 ```
 
 数据流：`想法 → ideas 表（source 标记形态）→ idea:expand 组装三分支 prompt → LLM/ZCode 返回 JSON → zod 校验 → idea_versions 新节点（v_no 事务内自增）→ 详情页时间线倒序渲染`。

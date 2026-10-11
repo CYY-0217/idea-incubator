@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-10 border-b border-border/70 bg-background/85 backdrop-blur-sm">
@@ -10,9 +12,17 @@ export function SiteHeader() {
             把模糊想法，养成能落地的样子
           </span>
         </div>
-        <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
-          v0
-        </span>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/review"
+            className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            周回顾
+          </Link>
+          <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
+            v0
+          </span>
+        </div>
       </div>
     </header>
   );

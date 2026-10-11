@@ -1,16 +1,27 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AttachmentPanel } from "@/components/attachment-panel";
+import { FollowupPanel } from "@/components/followup-panel";
 import {
   SOURCE_LABEL,
   STATUS_META,
 } from "@/components/idea-card";
 import { StatusSwitcher } from "@/components/status-switcher";
+import { TagEditor } from "@/components/tag-editor";
 import { VersionTimeline } from "@/components/version-timeline";
 import { getIdea } from "@/lib/queries";
 import { timeAgo } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
+      {children}
+    </h2>
+  );
+}
 
 export default async function IdeaDetailPage({
   params,
@@ -23,7 +34,7 @@ export default async function IdeaDetailPage({
 
   const detail = await getIdea(num);
   if (!detail) notFound();
-  const { idea, attachments, versions } = detail;
+  const { idea, attachments, versions, followups, tags } = detail;
   const status = STATUS_META[idea.status];
 
   return (
@@ -55,36 +66,38 @@ export default async function IdeaDetailPage({
       </header>
 
       <section className="flex flex-col gap-2">
-        <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
-          状态
-        </h2>
+        <SectionLabel>标签</SectionLabel>
+        <TagEditor ideaId={idea.id} initial={tags} />
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <SectionLabel>状态</SectionLabel>
         <StatusSwitcher id={idea.id} current={idea.status} />
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
-          演化时间线
-        </h2>
+        <SectionLabel>演化时间线</SectionLabel>
         <VersionTimeline versions={versions} />
       </section>
 
+      <section className="flex flex-col gap-3">
+        <SectionLabel>AI 追问</SectionLabel>
+        <FollowupPanel
+          ideaId={idea.id}
+          followups={followups.map((f) => ({
+            id: f.id,
+            question: f.question,
+            answer: f.answer,
+          }))}
+        />
+      </section>
+
       <section className="flex flex-col gap-2">
-        <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
-          附件
-        </h2>
-        {attachments.length === 0 ? (
-          <p className="text-xs text-muted-foreground/60">
-            暂无。截图上传明晚接上。
-          </p>
-        ) : (
-          <ul className="flex flex-col gap-1">
-            {attachments.map((a) => (
-              <li key={a.id} className="font-mono text-xs text-muted-foreground">
-                {a.filePath}
-              </li>
-            ))}
-          </ul>
-        )}
+        <SectionLabel>附件</SectionLabel>
+        <AttachmentPanel
+          ideaId={idea.id}
+          attachments={attachments.map((a) => ({ id: a.id, filePath: a.filePath }))}
+        />
       </section>
     </div>
   );

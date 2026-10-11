@@ -31,7 +31,15 @@ export const SOURCE_LABEL: Record<IdeaSource, string> = {
   screenshot: "截图",
 };
 
-export function IdeaCard({ idea, index = 0 }: { idea: Idea; index?: number }) {
+export function IdeaCard({
+  idea,
+  index = 0,
+  tags = [],
+}: {
+  idea: Idea;
+  index?: number;
+  tags?: string[];
+}) {
   const status = STATUS_META[idea.status];
 
   return (
@@ -62,6 +70,18 @@ export function IdeaCard({ idea, index = 0 }: { idea: Idea; index?: number }) {
         <p className="line-clamp-2 px-4 text-sm leading-relaxed text-foreground/90">
           {idea.rawText}
         </p>
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 px-4 pb-1">
+            {tags.map((t) => (
+              <span
+                key={t}
+                className="rounded bg-secondary px-1.5 py-0.5 text-[11px] text-muted-foreground"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
       </Card>
     </Link>
   );

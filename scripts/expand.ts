@@ -1,25 +1,15 @@
 import "dotenv/config";
 
+import { callDeepSeekJSON, extractJson, hasDeepSeekKey } from "../src/lib/ai";
 import {
   expandPayloadSchema,
   formatExpandError,
 } from "../src/lib/expand-schema";
 import { addIdeaVersion, getIdea } from "../src/lib/queries";
-import { buildExpandPrompt, SYSTEM_PROMPT } from "./prompt";
-
-const DEEPSEEK_URL = "https://api.deepseek.com/chat/completions";
-
-/** 容错提取 JSON：剥掉 markdown 围栏，取首尾大括号之间 */
-function extractJson(text: string): unknown {
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-  const raw = fenced ? fenced[1] : text;
-  const start = raw.indexOf("{");
-  const end = raw.lastIndexOf("}");
-  if (start === -1 || end === -1 || end <= start) {
-    throw new Error("返回内容里没找到 JSON 对象");
-  }
-  return JSON.parse(raw.slice(start, end + 1));
-}
+import {
+  buildExpandPrompt,
+  SYSTEM_PROMPT,
+} from "../src/lib/prompt";
 
 async function readStdin(): Promise<string> {
   const chunks: Buffer[] = [];
@@ -44,35 +34,11 @@ async function main() {
     rawText: detail.idea.rawText,
     source: detail.idea.source,
   });
-  const apiKey = process.env.DEEPSEEK_API_KEY;
-  let content: string;
 
-  if (apiKey) {
+  let parsed: unknown;
+  if (hasDeepSeekKey()) {
     console.error("→ 使用 DeepSeek API 展开…");
-    const res = await fetch(DEEPSEEK_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "deepseek-chat",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userPrompt },
-        ],
-        response_format: { type: "json_object" },
-        temperature: 0.7,
-      }),
-    });
-    if (!res.ok) {
-      console.error(`DeepSeek API 错误 ${res.status}: ${await res.text()}`);
-      process.exit(1);
-    }
-    const data = (await res.json()) as {
-      choices: Array<{ message: { content: string } }>;
-    };
-    content = data.choices[0].message.content;
+    parsed = await callDeepSeekJSON(SYSTEM_PROMPT, userPrompt);
   } else {
     // ZCode 通道：prompt 打到 stdout，JSON 从 stdin 读（支持管道），零 API token
     console.log("=== SYSTEM ===");
@@ -84,15 +50,8 @@ async function main() {
         "拿回 JSON 后粘贴到本进程的标准输入（支持管道喂入），Ctrl-D 结束。\n",
     );
     console.error("=== 等待 stdin 的 JSON ===");
-    content = await readStdin();
-  }
-
-  let parsed: unknown;
-  try {
+    const content = await readStdin();
     parsed = extractJson(content);
-  } catch (e) {
-    console.error(`JSON 解析失败: ${(e as Error).message}`);
-    process.exit(1);
   }
 
   const result = expandPayloadSchema.safeParse(parsed);
@@ -104,10 +63,13 @@ async function main() {
   const version = await addIdeaVersion({
     ideaId: id,
     payload: result.data,
-    origin: apiKey ? "deepseek" : "zcode",
+    origin: hasDeepSeekKey() ? "deepseek" : "zcode",
   });
   console.error(`✅ 已写入 v${version.vNo}（origin=${version.origin}）`);
   process.exit(0);
 }
 
-main();
+main().catch((e) => {
+  console.error((e as Error).message);
+  process.exit(1);
+});
