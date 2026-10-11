@@ -1,4 +1,5 @@
 import { SiteHeader } from "@/components/site-header";
+import { Toaster } from "@/components/ui/sonner";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body className="flex min-h-dvh flex-col antialiased">
         <SiteHeader />
         <main className="flex-1">{children}</main>
+        <Toaster theme="dark" position="top-center" />
       </body>
     </html>
   );

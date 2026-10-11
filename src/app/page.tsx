@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { IdeaCard } from "@/components/idea-card";
+import { IdeaInput } from "@/components/idea-input";
 import { listIdeas, type IdeaStatus } from "@/lib/queries";
 
 // 每次请求实时拉库，收件箱不做静态化
@@ -29,6 +30,8 @@ export default async function Home({
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-5 px-6 py-10">
+      <IdeaInput />
+
       <nav className="flex flex-wrap items-center gap-1.5">
         {FILTERS.map((f) => {
           const isActive = f.value === active;
@@ -51,7 +54,7 @@ export default async function Home({
       {ideas.length === 0 ? (
         <div className="flex flex-col items-start gap-2 py-16">
           <p className="text-sm text-muted-foreground">
-            这里还是空的。第一条想法，扔进来就好。
+            这里还是空的。在上面扔下第一条想法就好。
           </p>
         </div>
       ) : (
