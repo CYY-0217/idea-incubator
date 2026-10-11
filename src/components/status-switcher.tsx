@@ -37,10 +37,10 @@ export function StatusSwitcher({
                 else toast.error(res.error);
               })
             }
-            className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs transition-colors disabled:opacity-90 ${
+            className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs transition-all duration-150 active:scale-95 disabled:opacity-90 ${
               active
-                ? "border-border bg-secondary text-foreground"
-                : "border-border/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                ? "border-border bg-secondary text-foreground shadow-sm"
+                : "border-border/70 text-muted-foreground hover:-translate-y-px hover:bg-card hover:text-foreground hover:shadow-sm"
             }`}
           >
             <span className={`size-1.5 rounded-full ${meta.dot}`} />

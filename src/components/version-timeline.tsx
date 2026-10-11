@@ -30,13 +30,17 @@ export function VersionTimeline({ versions }: { versions: IdeaVersion[] }) {
 
   return (
     <ol className="relative flex flex-col gap-5 border-l border-border/70 pl-5">
-      {sorted.map((v) => {
+      {sorted.map((v, i) => {
         const p = (v.payload ?? {}) as Record<string, unknown>;
         return (
-          <li key={v.id} className="relative">
-            <span className="absolute -left-[25px] top-1.5 size-2 rounded-full bg-primary/90 ring-4 ring-background" />
+          <li
+            key={v.id}
+            className="relative animate-in fade-in slide-in-from-left-2 duration-500 [animation-fill-mode:backwards]"
+            style={{ animationDelay: `${Math.min(i, 6) * 80}ms` }}
+          >
+            <span className="absolute -left-[25px] top-1.5 size-2 rounded-full bg-primary ring-4 ring-background" />
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="font-mono text-[11px] text-foreground/80">
+              <span className="font-mono text-[11px] font-medium text-foreground/80">
                 v{v.vNo}
               </span>
               <Badge
@@ -49,7 +53,7 @@ export function VersionTimeline({ versions }: { versions: IdeaVersion[] }) {
                 {timeAgo(v.createdAt)}
               </span>
             </div>
-            <div className="mt-2 flex flex-col gap-2.5 rounded-lg border border-border/60 bg-card/50 p-3.5">
+            <div className="mt-2 flex flex-col gap-2.5 rounded-lg border border-border/60 bg-card p-3.5 shadow-card">
               {FIELDS.map((f) =>
                 typeof p[f.key] === "string" && p[f.key] ? (
                   <div key={f.key} className="flex flex-col gap-0.5">
@@ -67,7 +71,7 @@ export function VersionTimeline({ versions }: { versions: IdeaVersion[] }) {
                   {p.novelty != null && (
                     <Badge
                       variant="outline"
-                      className="rounded-md px-1.5 font-mono text-[11px] font-normal text-amber-300/90"
+                      className="rounded-md px-1.5 font-mono text-[11px] font-normal text-orange-600"
                     >
                       新颖性 {String(p.novelty)}/5
                     </Badge>
@@ -75,7 +79,7 @@ export function VersionTimeline({ versions }: { versions: IdeaVersion[] }) {
                   {p.feasibility != null && (
                     <Badge
                       variant="outline"
-                      className="rounded-md px-1.5 font-mono text-[11px] font-normal text-sky-300/90"
+                      className="rounded-md px-1.5 font-mono text-[11px] font-normal text-sky-600"
                     >
                       可行性 {String(p.feasibility)}/5
                     </Badge>

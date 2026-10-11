@@ -49,7 +49,7 @@ export default async function IdeaDetailPage({
             #{idea.id}
           </span>
         </div>
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+        <p className="whitespace-pre-wrap font-heading text-[15px] leading-relaxed text-foreground/90">
           {idea.rawText}
         </p>
       </header>

@@ -67,10 +67,10 @@ export function IdeaInput() {
             type="button"
             aria-pressed={m.value === mode}
             onClick={() => setMode(m.value)}
-            className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${
+            className={`rounded-md border px-2.5 py-1 text-xs transition-all duration-150 active:scale-95 ${
               m.value === mode
-                ? "border-transparent bg-primary text-primary-foreground"
-                : "border-border/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                ? "border-transparent bg-primary text-primary-foreground shadow-sm"
+                : "border-border/70 text-muted-foreground hover:-translate-y-px hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm"
             }`}
           >
             {m.label}
@@ -82,7 +82,7 @@ export function IdeaInput() {
         onChange={(e) => setValue(e.target.value)}
         placeholder={active.placeholder}
         rows={3}
-        className="resize-none bg-card/60 text-sm"
+        className="resize-none bg-card text-sm shadow-card transition-shadow duration-200 focus-visible:shadow-card-hover"
         onKeyDown={(e) => {
           if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
             e.preventDefault();
@@ -94,7 +94,12 @@ export function IdeaInput() {
         <span className="font-mono text-[11px] text-muted-foreground/60">
           ⌘/Ctrl + ↩ 发送
         </span>
-        <Button type="submit" size="sm" disabled={pending}>
+        <Button
+          type="submit"
+          size="sm"
+          disabled={pending}
+          className="shadow-sm transition-all duration-150 active:scale-95"
+        >
           {pending ? "收起中…" : "扔进收件箱"}
         </Button>
       </div>

@@ -39,10 +39,10 @@ export default async function Home({
             <Link
               key={f.value}
               href={f.value === "all" ? "/" : `/?status=${f.value}`}
-              className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${
+              className={`rounded-md border px-2.5 py-1 text-xs transition-all duration-150 active:scale-95 ${
                 isActive
-                  ? "border-transparent bg-primary text-primary-foreground"
-                  : "border-border/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "border-transparent bg-primary text-primary-foreground shadow-sm"
+                  : "border-border/70 text-muted-foreground hover:-translate-y-px hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm"
               }`}
             >
               {f.label}
@@ -53,14 +53,15 @@ export default async function Home({
 
       {ideas.length === 0 ? (
         <div className="flex flex-col items-start gap-2 py-16">
+          <p className="font-heading text-xl">这里还是空的。</p>
           <p className="text-sm text-muted-foreground">
-            这里还是空的。在上面扔下第一条想法就好。
+            在上面扔下第一条想法就好。
           </p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {ideas.map((idea) => (
-            <IdeaCard key={idea.id} idea={idea} />
+          {ideas.map((idea, i) => (
+            <IdeaCard key={idea.id} idea={idea} index={i} />
           ))}
         </div>
       )}

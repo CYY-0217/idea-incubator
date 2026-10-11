@@ -9,7 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans), "PingFang SC", "Noto Sans SC", sans-serif;
   --font-mono: var(--font-geist-mono), "SF Mono", monospace;
-  --font-heading: var(--font-sans);
+  --font-heading: "Songti SC", "Noto Serif SC", "STSong", ui-serif, Georgia, serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -39,6 +39,9 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  /* 纸面柔和阴影：hover 时抬升 */
+  --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 3px 10px rgb(28 25 23 / 0.05);
+  --shadow-card-hover: 0 2px 4px rgb(28 25 23 / 0.06), 0 10px 28px rgb(28 25 23 / 0.11);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -48,43 +51,44 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* 暖纸白 · 墨橙：米白纸底、墨色文字、朱橙单点缀 */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.977 0.004 85);
+  --foreground: oklch(0.216 0.006 56);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.216 0.006 56);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.216 0.006 56);
+  --primary: oklch(0.65 0.18 35);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.946 0.008 85);
+  --secondary-foreground: oklch(0.3 0.01 56);
+  --muted: oklch(0.955 0.006 85);
+  --muted-foreground: oklch(0.553 0.013 58);
+  --accent: oklch(0.946 0.008 85);
+  --accent-foreground: oklch(0.3 0.01 56);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.5rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --border: oklch(0.905 0.009 85);
+  --input: oklch(0.895 0.01 85);
+  --ring: oklch(0.65 0.18 35);
+  --chart-1: oklch(0.65 0.18 35);
+  --chart-2: oklch(0.588 0.126 241);
+  --chart-3: oklch(0.627 0.143 163);
+  --chart-4: oklch(0.606 0.152 292);
+  --chart-5: oklch(0.553 0.013 58);
+  --radius: 0.625rem;
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.216 0.006 56);
+  --sidebar-primary: oklch(0.65 0.18 35);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.946 0.008 85);
+  --sidebar-accent-foreground: oklch(0.3 0.01 56);
+  --sidebar-border: oklch(0.905 0.009 85);
+  --sidebar-ring: oklch(0.65 0.18 35);
 }
 
+/* 深色变体保留但默认不启用（用户明确拒绝深色窗口） */
 .dark {
-  /* 暖黑底 + 琥珀点缀：克制的工具感，拒绝蓝紫渐变的 AI 感 */
   --background: oklch(0.135 0.004 80);
   --foreground: oklch(0.93 0.005 80);
   --card: oklch(0.175 0.005 80);
@@ -112,10 +116,10 @@
   --sidebar-foreground: oklch(0.93 0.005 80);
   --sidebar-primary: oklch(0.8 0.128 78);
   --sidebar-primary-foreground: oklch(0.17 0.03 78);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-accent: oklch(0.235 0.005 80);
+  --sidebar-accent-foreground: oklch(0.93 0.005 80);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.8 0.128 78 / 55%);
 }
 
 @layer base {
@@ -129,6 +133,6 @@
     @apply font-sans;
   }
   ::selection {
-    background-color: oklch(0.8 0.128 78 / 22%);
+    background-color: oklch(0.65 0.18 35 / 15%);
   }
 }
