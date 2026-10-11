@@ -65,12 +65,21 @@
 - [x] P14 scripts/prompt.ts：system prompt + 三分支 + 九字段说明。自查 tsx 打印三分支。
 - [x] P15 lib/expand-schema.ts：zod 九字段校验。自查 tsx 合法/非法样例。
 - [x] P16 scripts/expand.ts：API/stdin 双通道 + idea:expand 脚本。自查管道喂合法+非法 JSON。
-- [ ] P17 README：简介/运行手册/架构/V2-V3 roadmap。
-- [ ] P18 终验：tsc+build 全绿，浏览器全流程走查，push GitHub + tag v0.1。
+- [x] P17 README：简介/运行手册/架构/V2-V3 roadmap。
+- [x] P18 终验：tsc+build 全绿，浏览器全流程走查，push GitHub + tag v0.1。
 
 ## BLOCK 记录
 
 （自查 2 次仍失败时，在此记录任务号+原因）
+
+## 终验记录（2026-10-12 凌晨，无人值守完成）
+
+- `pnpm exec tsc --noEmit` 全绿；`next build` 全绿（两路由按设计动态渲染）
+- 浏览器五环走查：UI 建卡（toast「已收进收件箱」）→ `idea:expand` 管道展开 → 详情页时间线出现 v1（origin=zcode）→ 状态切换至推进中（toast + DB 落库）→ 首页筛选联动 → 验收数据已删除，空库交还
+- 环境坑记录（与代码无关）：
+  1. ZCode IAB 后端不派发物理点击/按键（事件探针证实），交互自查改用 DOM 级 .click()；
+  2. `next build` 与运行中的 `next dev` 共用 .next 会把 dev 构建清单清掉（500），需重启 dev；验收时已重启。
+- 状态：V0 全部 18 项任务完成。
 
 ## 明晚盘子
 
