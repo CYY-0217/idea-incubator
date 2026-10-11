@@ -5,6 +5,7 @@ import {
   SOURCE_LABEL,
   STATUS_META,
 } from "@/components/idea-card";
+import { VersionTimeline } from "@/components/version-timeline";
 import { getIdea } from "@/lib/queries";
 import { timeAgo } from "@/lib/time";
 
@@ -21,7 +22,7 @@ export default async function IdeaDetailPage({
 
   const detail = await getIdea(num);
   if (!detail) notFound();
-  const { idea, attachments } = detail;
+  const { idea, attachments, versions } = detail;
   const status = STATUS_META[idea.status];
 
   return (
@@ -51,6 +52,13 @@ export default async function IdeaDetailPage({
           {idea.rawText}
         </p>
       </header>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
+          演化时间线
+        </h2>
+        <VersionTimeline versions={versions} />
+      </section>
 
       <section className="flex flex-col gap-2">
         <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
