@@ -5,6 +5,7 @@ import {
   SOURCE_LABEL,
   STATUS_META,
 } from "@/components/idea-card";
+import { StatusSwitcher } from "@/components/status-switcher";
 import { VersionTimeline } from "@/components/version-timeline";
 import { getIdea } from "@/lib/queries";
 import { timeAgo } from "@/lib/time";
@@ -52,6 +53,13 @@ export default async function IdeaDetailPage({
           {idea.rawText}
         </p>
       </header>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
+          状态
+        </h2>
+        <StatusSwitcher id={idea.id} current={idea.status} />
+      </section>
 
       <section className="flex flex-col gap-3">
         <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">

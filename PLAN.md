@@ -60,7 +60,7 @@
 - [x] P10 输入区：三模式 chips + textarea + server action + 空状态 + sonner。自查两模式各建一条。
       备注：IAB 后端不派发物理点击/按键（事件探针证实），交互自查改用 DOM 级 .click() 驱动（真实 DOM 事件、React 完整处理）；校验逻辑抽到 lib/idea-service.ts 便于脚本测试。
 - [x] P11 详情页 /idea/[id]：原文+元信息+附件占位，notFound。自查 404。
-- [ ] P12 版本时间线组件（九字段分块+双分徽章）。自查假数据走查。
+- [x] P12 版本时间线组件（九字段分块+双分徽章）。自查假数据走查。
 - [ ] P13 状态切换按钮组 + server action。自查改状态→列表筛选生效。
 - [ ] P14 scripts/prompt.ts：system prompt + 三分支 + 九字段说明。自查 tsx 打印三分支。
 - [ ] P15 lib/expand-schema.ts：zod 九字段校验。自查 tsx 合法/非法样例。
