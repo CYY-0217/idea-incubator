@@ -1,3 +1,4 @@
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className="flex min-h-dvh flex-col antialiased">
         <SiteHeader />
         <main className="flex-1">{children}</main>
+        <SiteFooter />
         <Toaster theme="light" position="top-center" />
       </body>
     </html>

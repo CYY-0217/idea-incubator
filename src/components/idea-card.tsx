@@ -35,10 +35,12 @@ export function IdeaCard({
   idea,
   index = 0,
   tags = [],
+  versionCount = 0,
 }: {
   idea: Idea;
   index?: number;
   tags?: string[];
+  versionCount?: number;
 }) {
   const status = STATUS_META[idea.status];
 
@@ -63,6 +65,11 @@ export function IdeaCard({
           >
             {SOURCE_LABEL[idea.source]}
           </Badge>
+          {versionCount > 0 && (
+            <span className="font-mono text-[10px] text-primary/80">
+              v{versionCount}
+            </span>
+          )}
           <span className="ml-auto font-mono text-[11px] text-muted-foreground/70">
             {timeAgo(idea.updatedAt)}
           </span>

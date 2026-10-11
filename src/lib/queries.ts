@@ -243,6 +243,127 @@ export async function setTags(
   });
 }
 
+/* ---------- 首页概览 ---------- */
+
+export type HomeEvent = {
+  kind: "created" | "version" | "followup";
+  ideaId: number;
+  ideaTitle: string;
+  at: Date;
+  label: string;
+};
+
+export type HomeOverview = {
+  total: number;
+  newThisWeek: number;
+  expandedTotal: number;
+  statusCounts: Record<IdeaStatus, number>;
+  recentEvents: HomeEvent[];
+};
+
+const ORIGIN_LABEL: Record<string, string> = {
+  zcode: "ZCode",
+  deepseek: "DeepSeek",
+  manual: "手动",
+};
+
+export async function getHomeOverview(): Promise<HomeOverview> {
+  const weekAgo = new Date(Date.now() - 7 * 86_400_000);
+  const all = await db.select().from(ideas).orderBy(desc(ideas.updatedAt));
+
+  const statusCounts: Record<IdeaStatus, number> = {
+    seed: 0,
+    shaping: 0,
+    proving: 0,
+    paused: 0,
+    shipped: 0,
+  };
+  for (const i of all) statusCounts[i.status]++;
+
+  const [{ count: expandedTotal }] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(ideaVersions);
+
+  const [createdRows, versionRows, followupRows] = await Promise.all([
+    db
+      .select({ id: ideas.id, title: ideas.rawText, at: ideas.createdAt })
+      .from(ideas)
+      .orderBy(desc(ideas.createdAt))
+      .limit(6),
+    db
+      .select({
+        ideaId: ideaVersions.ideaId,
+        vNo: ideaVersions.vNo,
+        origin: ideaVersions.origin,
+        at: ideaVersions.createdAt,
+        title: ideas.rawText,
+      })
+      .from(ideaVersions)
+      .innerJoin(ideas, eq(ideas.id, ideaVersions.ideaId))
+      .orderBy(desc(ideaVersions.createdAt))
+      .limit(6),
+    db
+      .select({
+        ideaId: followups.ideaId,
+        at: followups.createdAt,
+        title: ideas.rawText,
+      })
+      .from(followups)
+      .innerJoin(ideas, eq(ideas.id, followups.ideaId))
+      .orderBy(desc(followups.createdAt))
+      .limit(6),
+  ]);
+
+  const recentEvents = [
+    ...createdRows.map((r) => ({
+      kind: "created" as const,
+      ideaId: r.id,
+      ideaTitle: r.title,
+      at: r.at,
+      label: "扔进了收件箱",
+    })),
+    ...versionRows.map((r) => ({
+      kind: "version" as const,
+      ideaId: r.ideaId,
+      ideaTitle: r.title,
+      at: r.at,
+      label: `展开出 v${r.vNo} · ${ORIGIN_LABEL[r.origin] ?? r.origin}`,
+    })),
+    ...followupRows.map((r) => ({
+      kind: "followup" as const,
+      ideaId: r.ideaId,
+      ideaTitle: r.title,
+      at: r.at,
+      label: "回答了 AI 追问",
+    })),
+  ]
+    .sort((a, b) => b.at.getTime() - a.at.getTime())
+    .slice(0, 6);
+
+  return {
+    total: all.length,
+    newThisWeek: all.filter((i) => i.createdAt >= weekAgo).length,
+    expandedTotal: Number(expandedTotal),
+    statusCounts,
+    recentEvents,
+  };
+}
+
+/** 一批想法各自的版本数（卡片「在生长」徽标，一次查询防 N+1） */
+export async function versionCountsForIdeas(
+  ideaIds: number[],
+): Promise<Map<number, number>> {
+  const map = new Map<number, number>();
+  if (ideaIds.length === 0) return map;
+  const rows = await db
+    .select({ ideaId: ideaVersions.ideaId, count: sql<number>`count(*)` })
+    .from(ideaVersions)
+    .where(inArray(ideaVersions.ideaId, ideaIds))
+    .groupBy(ideaVersions.ideaId);
+  for (const row of rows) map.set(row.ideaId, Number(row.count));
+  return map;
+}
+
 /* ---------- 周回顾 ---------- */
 
 export type WeeklyReview = {
