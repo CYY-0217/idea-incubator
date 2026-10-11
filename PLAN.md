@@ -46,7 +46,8 @@
 ## 任务清单（勾选 = 完成且自查通过）
 
 - [x] P01 初始化：Next.js 项目（TS/App Router/Tailwind4/src+@别名）+ git + 依赖（drizzle-orm/postgres/zod/drizzle-kit）。自查 tsc+dev。
-- [ ] P02 UI 基建：shadcn init 暗色 + 8 组件（button/card/input/textarea/badge/select/dialog/sonner）+ layout 页头。自查 tsc。
+- [x] P02 UI 基建：shadcn init 暗色 + 8 组件（button/card/input/textarea/badge/select/dialog/sonner）+ layout 页头。自查 tsc。
+      备注：shadcn 4.x 用 `init -b radix -p nova`（预设 Nova=Lucide+Geist）；主题改暖黑+琥珀（oklch 0.8 0.128 78）；next/font 变量挂 html 修中文宋体问题；截图自查通过。
 - [ ] P03 数据库基建：.env/.env.example、createdb idea_incubator、drizzle.config.ts、空迁移跑通。自查 psql 连通。
 - [ ] P04 schema 五表 + 枚举 + 索引，generate+migrate。自查 psql \dt 五表。
 - [ ] P05 lib/db 单例 + queries 组一：createIdea/listIdeas/getIdea(联表)/updateStatus。自查 tsx 建→查。
