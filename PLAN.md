@@ -50,7 +50,7 @@
       备注：shadcn 4.x 用 `init -b radix -p nova`（预设 Nova=Lucide+Geist）；主题改暖黑+琥珀（oklch 0.8 0.128 78）；next/font 变量挂 html 修中文宋体问题；截图自查通过。
 - [x] P03 数据库基建：.env/.env.example、createdb idea_incubator、drizzle.config.ts、空迁移跑通。自查 psql 连通。
       备注：PostgreSQL 18.6（brew，用户 cyy，socket /tmp:5432）；.gitignore 补 `!.env.example` 豁免。
-- [ ] P04 schema 五表 + 枚举 + 索引，generate+migrate。自查 psql \dt 五表。
+- [x] P04 schema 五表 + 枚举 + 索引，generate+migrate。自查 psql \dt 五表。
 - [ ] P05 lib/db 单例 + queries 组一：createIdea/listIdeas/getIdea(联表)/updateStatus。自查 tsx 建→查。
 - [ ] P06 queries 组二：addIdeaVersion(事务 v_no+1)/addFollowup/addAttachment/setTags。自查 tsx v_no=1。
 - [ ] P07 lib/time.ts 相对时间工具。自查 tsx 三例。
