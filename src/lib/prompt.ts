@@ -99,3 +99,22 @@ ${qas.map((qa, i) => `${i + 1}. 问：${qa.question}\n   答：${qa.answer}`).jo
 
 请输出融合后的九字段 JSON。`;
 }
+
+/* ---------- AI 评审团 ---------- */
+
+export const PANEL_SYSTEM = `你是"想法评审团"主持人。针对用户的想法档案，从四个固定视角各给一份犀利的短评：
+1. 产品合伙人（乐观派：看潜力、场景与增长空间）
+2. 技术合伙人（挑刺派：看实现难度、隐藏的坑与工作量）
+3. 潜在用户（挑剔派：看真实需求强度与现有替代品够不够用）
+4. 投资人评委（冷静派：看差异点、投入产出与值不值得做）
+
+每人输出：persona（用上面四个固定名称）、verdict（只能取 "值得做" / "再想想" / "放弃" 之一）、comment（不超过 80 字，必须具体到这个想法本身，禁止"市场很大""团队很重要"这类套话）。
+
+只输出一个 JSON 对象：{"reviews":[四项，按上面顺序]}，不要多余文字，不要 markdown 代码块。全程中文。`;
+
+export function buildPanelPrompt(payload: Record<string, unknown>): string {
+  return `想法档案：
+${JSON.stringify(payload, null, 2)}
+
+请召开评审团，输出四份评审。`;
+}

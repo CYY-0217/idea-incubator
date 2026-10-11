@@ -9,6 +9,7 @@ import {
   ideaTags,
   ideaVersions,
   ideas,
+  panelReviews,
   tags,
   versionOrigin,
 } from "./db/schema";
@@ -243,6 +244,72 @@ export async function setTags(
   });
 }
 
+/* ---------- AI 评审团 ---------- */
+
+export type PanelRow = typeof panelReviews.$inferSelect;
+
+export async function getPanels(ideaId: number): Promise<PanelRow[]> {
+  return db
+    .select()
+    .from(panelReviews)
+    .where(eq(panelReviews.ideaId, ideaId))
+    .orderBy(desc(panelReviews.createdAt));
+}
+
+export async function addPanelReview(input: {
+  ideaId: number;
+  payload: { reviews: Array<{ persona: string; verdict: string; comment: string }> };
+  origin: VersionOrigin;
+}): Promise<PanelRow> {
+  const [row] = await db
+    .insert(panelReviews)
+    .values({ ideaId: input.ideaId, payload: input.payload, origin: input.origin })
+    .returning();
+  return row;
+}
+
+/* ---------- 想法图谱 ---------- */
+
+export type GraphData = {
+  nodes: Array<{
+    id: number;
+    title: string;
+    status: IdeaStatus;
+    versionCount: number;
+  }>;
+  edges: Array<{ a: number; b: number; score: number }>;
+};
+
+/** 全部想法为节点、活跃想法之间的 Jaccard 相似度为边 */
+export async function getGraph(threshold = 0.15): Promise<GraphData> {
+  const all = await listIdeas();
+  const versionMap = await versionCountsForIdeas(all.map((i) => i.id));
+  const nodes = all.map((i) => ({
+    id: i.id,
+    title: i.rawText,
+    status: i.status,
+    versionCount: versionMap.get(i.id) ?? 0,
+  }));
+
+  const active = all.filter(
+    (i) =>
+      i.status === "seed" || i.status === "shaping" || i.status === "proving",
+  );
+  const grams = active.map((i) => ({ id: i.id, set: bigrams(i.rawText) }));
+  const edges: GraphData["edges"] = [];
+  for (let i = 0; i < grams.length; i++) {
+    for (let j = i + 1; j < grams.length; j++) {
+      const score = jaccard(grams[i].set, grams[j].set);
+      if (score >= threshold) {
+        edges.push({ a: grams[i].id, b: grams[j].id, score });
+      }
+    }
+  }
+  edges.sort((x, y) => y.score - x.score);
+
+  return { nodes, edges };
+}
+
 /* ---------- 首页概览 ---------- */
 
 export type HomeEvent = {
@@ -375,14 +442,14 @@ export type WeeklyReview = {
 };
 
 /** 字符二元组 Jaccard 相似度：零成本本地查重，够发现"其实是同一件事" */
-function bigrams(text: string): Set<string> {
+export function bigrams(text: string): Set<string> {
   const s = text.replace(/\s+/g, "");
   const set = new Set<string>();
   for (let i = 0; i < s.length - 1; i++) set.add(s.slice(i, i + 2));
   return set;
 }
 
-function jaccard(a: Set<string>, b: Set<string>): number {
+export function jaccard(a: Set<string>, b: Set<string>): number {
   if (a.size === 0 || b.size === 0) return 0;
   let inter = 0;
   for (const x of a) if (b.has(x)) inter++;

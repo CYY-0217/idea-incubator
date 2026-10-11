@@ -15,6 +15,9 @@
 - **演化时间线**：每次展开是 v_n 节点，九字段分块展示，双评分徽章，origin 标记（ZCode / DeepSeek / 手动）
 - **AI 追问回流**：AI 出 3 个苏格拉底追问 → 你作答 → 回答融合成 v(n+1) 新版本（DeepSeek 自动融合，无 key 时走 ZCode 粘贴通道）
 - **周回顾** `/review`：本周统计、沉睡想法提醒、相似想法配对（本地二元组 Jaccard，零 token）
+- **看板** `/board`：五列拖拽看板，拖动卡片即流转状态
+- **想法图谱** `/graph`：力导向关联图，连线=文本相似度（自写模拟，无依赖），拖节点、点开详情
+- **AI 评审团**：四角色（产品/技术/用户/投资人）对想法各给一份裁决短评（值得做/再想想/放弃），归档在详情页
 - 展开引擎：`pnpm idea:expand <id>`，DeepSeek API 与 ZCode 代跑双通道
 
 未实现：多用户/部署/手机端 PWA、语音输入（手动转文字即可）。
@@ -64,17 +67,21 @@ src/
     page.tsx              # 收件箱：输入区 + 状态/标签筛选 + 卡片流（实时拉库）
     idea/[id]/page.tsx    # 详情：原文、标签、状态、时间线、AI 追问、附件
     review/page.tsx       # 周回顾：统计 + 沉睡想法 + 相似配对
-    actions.ts            # server actions（建卡/状态/标签/附件/追问/回流）
+    board/page.tsx        # 看板：五列拖拽流转状态
+    graph/page.tsx        # 图谱：力导向关联图（自写模拟，无依赖）
+    actions.ts            # server actions（建卡/状态/标签/附件/追问/评审）
     api/upload            # POST 图片落盘 data/uploads/
     api/attachments/[id]  # GET 附件流（按扩展名回 content-type）
   components/             # IdeaCard、IdeaInput、StatusSwitcher、VersionTimeline、
-                          # TagEditor、AttachmentPanel、FollowupPanel
+                          # TagEditor、AttachmentPanel、FollowupPanel、Board、ForceGraph、
+                          # PanelSection
   lib/
-    db/                   # drizzle client 单例 + schema（5 张表）
-    queries.ts            # 查询/写入层（版本号在事务内 max+1、周回顾统计）
+    db/                   # drizzle client 单例 + schema（6 张表，含 panel_reviews）
+    queries.ts            # 查询/写入层（版本事务、周回顾、图谱、评审）
     idea-service.ts       # 输入校验（action 与脚本共用）
     expand-schema.ts      # 九字段 zod schema
-    prompt.ts             # 展开/追问/融合三套 prompt
+    panel-schema.ts       # 评审 JSON zod schema
+    prompt.ts             # 展开/追问/融合/评审团四套 prompt
     ai.ts                 # DeepSeek 通道助手（无 key 时调用方走 ZCode 路径）
     time.ts               # 相对时间
 scripts/

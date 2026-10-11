@@ -8,10 +8,12 @@ import {
   expandPayloadSchema,
   formatExpandError,
 } from "@/lib/expand-schema";
+import { panelPayloadSchema, formatPanelError } from "@/lib/panel-schema";
 import {
   addAttachment,
   addFollowup,
   addIdeaVersion,
+  addPanelReview,
   getIdea,
   setTags,
   updateStatus,
@@ -19,9 +21,12 @@ import {
   type IdeaSource,
 } from "@/lib/queries";
 import {
+  buildExpandPrompt,
   buildMergePrompt,
+  buildPanelPrompt,
   buildQuestionPrompt,
   MERGE_SYSTEM,
+  PANEL_SYSTEM,
   QUESTION_SYSTEM,
 } from "@/lib/prompt";
 
@@ -189,4 +194,69 @@ export async function applyMergedVersionAction(input: {
   });
   revalidatePath(`/idea/${input.ideaId}`);
   return { ok: true, vNo: v.vNo };
+}
+
+/* ---------- AI 评审团（双通道） ---------- */
+
+export type PanelResult =
+  | { ok: true; mode: "deepseek" }
+  | { ok: true; mode: "zcode"; prompt: string }
+  | { ok: false; error: string };
+
+export async function generatePanelAction(input: {
+  ideaId: number;
+}): Promise<PanelResult> {
+  const detail = await getIdea(input.ideaId);
+  if (!detail) return { ok: false, error: "想法不存在" };
+  const payload = (detail.versions[0]?.payload ?? { rawText: detail.idea.rawText }) as Record<string, unknown>;
+
+  if (hasDeepSeekKey()) {
+    try {
+      const parsed = await callDeepSeekJSON(
+        PANEL_SYSTEM,
+        buildPanelPrompt(payload),
+      );
+      const result = panelPayloadSchema.safeParse(parsed);
+      if (!result.success)
+        return { ok: false, error: formatPanelError(result.error) };
+      await addPanelReview({
+        ideaId: input.ideaId,
+        payload: result.data,
+        origin: "deepseek",
+      });
+      revalidatePath(`/idea/${input.ideaId}`);
+      return { ok: true, mode: "deepseek" };
+    } catch (e) {
+      return { ok: false, error: (e as Error).message };
+    }
+  }
+
+  return {
+    ok: true,
+    mode: "zcode",
+    prompt: `=== SYSTEM ===\n${PANEL_SYSTEM}\n\n=== USER ===\n${buildPanelPrompt(payload)}`,
+  };
+}
+
+export async function applyPanelAction(input: {
+  ideaId: number;
+  json: string;
+}): Promise<ActionResult> {
+  let parsed: unknown;
+  try {
+    parsed = extractJson(input.json);
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+  const result = panelPayloadSchema.safeParse(parsed);
+  if (!result.success)
+    return { ok: false, error: formatPanelError(result.error) };
+
+  await addPanelReview({
+    ideaId: input.ideaId,
+    payload: result.data,
+    origin: "zcode",
+  });
+  revalidatePath(`/idea/${input.ideaId}`);
+  return { ok: true };
 }

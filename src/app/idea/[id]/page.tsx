@@ -7,10 +7,11 @@ import {
   SOURCE_LABEL,
   STATUS_META,
 } from "@/components/idea-card";
+import { PanelSection } from "@/components/panel-section";
 import { StatusSwitcher } from "@/components/status-switcher";
 import { TagEditor } from "@/components/tag-editor";
 import { VersionTimeline } from "@/components/version-timeline";
-import { getIdea } from "@/lib/queries";
+import { getIdea, getPanels } from "@/lib/queries";
 import { timeAgo } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,7 @@ export default async function IdeaDetailPage({
   const detail = await getIdea(num);
   if (!detail) notFound();
   const { idea, attachments, versions, followups, tags } = detail;
+  const panels = await getPanels(num);
   const status = STATUS_META[idea.status];
 
   return (
@@ -78,6 +80,24 @@ export default async function IdeaDetailPage({
       <section className="flex flex-col gap-3">
         <SectionLabel>演化时间线</SectionLabel>
         <VersionTimeline versions={versions} />
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <SectionLabel>AI 评审团</SectionLabel>
+        <PanelSection
+          ideaId={idea.id}
+          panels={panels.map((p) => {
+            const payload = p.payload as {
+              reviews?: Array<{ persona: string; verdict: string; comment: string }>;
+            };
+            return {
+              id: p.id,
+              reviews: payload.reviews ?? [],
+              origin: p.origin,
+              at: timeAgo(p.createdAt),
+            };
+          })}
+        />
       </section>
 
       <section className="flex flex-col gap-3">

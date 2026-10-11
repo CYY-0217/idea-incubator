@@ -16,12 +16,26 @@ export function SiteHeader() {
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <Link
-            href="/review"
-            className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-          >
-            周回顾
-          </Link>
+          <nav className="flex items-center gap-3 text-xs text-muted-foreground">
+            <Link
+              href="/board"
+              className="transition-colors hover:text-foreground"
+            >
+              看板
+            </Link>
+            <Link
+              href="/graph"
+              className="transition-colors hover:text-foreground"
+            >
+              图谱
+            </Link>
+            <Link
+              href="/review"
+              className="transition-colors hover:text-foreground"
+            >
+              周回顾
+            </Link>
+          </nav>
           <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
             v0
           </span>

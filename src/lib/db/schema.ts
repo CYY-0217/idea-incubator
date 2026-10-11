@@ -126,3 +126,21 @@ export const ideaTags = pgTable(
     index("idea_tags_tag_idx").on(t.tagId),
   ],
 );
+
+// AI 评审团：四角色（产品/技术/用户/投资）对一次想法的辩论记录
+export const panelReviews = pgTable(
+  "panel_reviews",
+  {
+    id: serial("id").primaryKey(),
+    ideaId: integer("idea_id")
+      .notNull()
+      .references(() => ideas.id, { onDelete: "cascade" }),
+    // { reviews: [{ persona, verdict, comment }] }
+    payload: jsonb("payload").notNull(),
+    origin: versionOrigin("origin").notNull().default("zcode"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [index("panel_reviews_idea_idx").on(t.ideaId)],
+);
