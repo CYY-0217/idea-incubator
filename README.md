@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Idea Incubator · 想法孵化器
 
-## Getting Started
+把模糊的想法——一个关键词、一段话、一段对话——随手扔进来，AI 把它展开成固定的九个字段（问题/产出形式路线/差异点/最小第一步/新颖性·可行性评分/风险），每次展开和修改都留版本节点，沉淀为想法的**演化时间线**。
 
-First, run the development server:
+定位：先做给自己用的 PC 端 web 应用；后续朝黑客松 demo 和大创选题方向演化（见 Roadmap）。
+
+## 现状（V0）
+
+已实现：
+
+- 收件箱：三种输入形态（关键词 / 想法 / 对话粘贴），状态筛选卡片流
+- 详情页：原文、五态状态流转（种子 → 展开中 → 推进中 → 落地，搁置旁路）
+- **演化时间线**：每次展开是 v_n 节点，九字段分块展示，双评分徽章，origin 标记（ZCode / DeepSeek / 手动）
+- 展开引擎：`pnpm idea:expand <id>`，DeepSeek API 与 ZCode 代跑双通道
+
+未实现（明晚盘子）：截图/网页剪裁上传、标签、AI 追问、周回顾、手机端 PWA、部署。
+
+## 技术栈
+
+Next.js 15（App Router）· React 19 · TypeScript · Tailwind 4 + shadcn/ui（radix）· Drizzle ORM + PostgreSQL · zod · tsx（脚本）
+
+## 运行手册
+
+前置：Node 20+、pnpm、本地 PostgreSQL（macOS 推荐 `brew install postgresql@18 && brew services start postgresql@18`）。
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env        # 按需改 DATABASE_URL，默认连本机当前用户
+createdb idea_incubator     # 若库不存在
+pnpm exec drizzle-kit migrate   # 建表
+pnpm dev                    # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 展开一个想法（两种方式）
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+方式一：ZCode 代跑（默认，零 API token）。`DEEPSEEK_API_KEY` 未设置时：
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm idea:expand 12
+# 脚本会打印 SYSTEM/USER 两段 prompt：
+# 1. 把它们交给 ZCode 会话，让它按 SYSTEM 的规则输出 JSON
+# 2. 把返回的 JSON 粘贴回脚本的标准输入（Ctrl-D 结束）
+```
 
-## Learn More
+也支持管道（方便自动化/复现）：
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+printf '%s' '{"restated":"…","problem":"…","output_form":"…","alternatives":"…","edge":"…","first_step":"…","novelty":2,"feasibility":5,"risk":"…"}' | pnpm idea:expand 12
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+方式二：DeepSeek API。在 `.env` 里加一行 `DEEPSEEK_API_KEY=sk-…`，再跑同一条命令，脚本自动切换到 API 通道（model `deepseek-chat`，JSON mode）。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+两种通道都会：校验九字段（类型 + 评分 1-5，评分写成字符串会自动纠偏）→ 以新版本节点写库 → 详情页时间线出现 v(n+1)。校验失败会打印字段级错误，改好重贴即可。
 
-## Deploy on Vercel
+## 架构一屏
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+  app/
+    page.tsx              # 收件箱：输入区 + 状态筛选 + 卡片流（实时拉库）
+    idea/[id]/page.tsx    # 详情：原文、状态切换、演化时间线、附件占位
+    actions.ts            # server actions（createIdeaAction / updateStatusAction）
+  components/             # IdeaCard、IdeaInput、StatusSwitcher、VersionTimeline
+  lib/
+    db/                   # drizzle client 单例 + schema（5 张表）
+    queries.ts            # 查询/写入层（版本号在事务内 max+1）
+    idea-service.ts       # 输入校验（action 与脚本共用）
+    expand-schema.ts      # 九字段 zod schema
+    time.ts               # 相对时间
+scripts/
+  prompt.ts               # SYSTEM_PROMPT + keyword/paste/text 三分支指令
+  expand.ts               # 展开引擎（DeepSeek API / stdin 双通道）
+drizzle/                  # 迁移文件
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+数据流：`想法 → ideas 表（source 标记形态）→ idea:expand 组装三分支 prompt → LLM/ZCode 返回 JSON → zod 校验 → idea_versions 新节点（v_no 事务内自增）→ 详情页时间线倒序渲染`。
+
+## Roadmap
+
+- **V1**：截图/网页剪裁上传（附件预览）、标签、AI 追问（追问回流为新版本节点）、周回顾 digest
+- **V2**：新颖性查重（检索 GitHub/论文/产品库，引用留痕——竞品调研显示这是行业空白）、手机端 PWA、部署公网
+- **V3**：大创申报书 / Lean Canvas 导出、想法关联图谱

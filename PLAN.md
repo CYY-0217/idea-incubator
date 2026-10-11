@@ -62,9 +62,9 @@
 - [x] P11 详情页 /idea/[id]：原文+元信息+附件占位，notFound。自查 404。
 - [x] P12 版本时间线组件（九字段分块+双分徽章）。自查假数据走查。
 - [x] P13 状态切换按钮组 + server action。自查改状态→列表筛选生效。
-- [ ] P14 scripts/prompt.ts：system prompt + 三分支 + 九字段说明。自查 tsx 打印三分支。
-- [ ] P15 lib/expand-schema.ts：zod 九字段校验。自查 tsx 合法/非法样例。
-- [ ] P16 scripts/expand.ts：API/stdin 双通道 + idea:expand 脚本。自查管道喂合法+非法 JSON。
+- [x] P14 scripts/prompt.ts：system prompt + 三分支 + 九字段说明。自查 tsx 打印三分支。
+- [x] P15 lib/expand-schema.ts：zod 九字段校验。自查 tsx 合法/非法样例。
+- [x] P16 scripts/expand.ts：API/stdin 双通道 + idea:expand 脚本。自查管道喂合法+非法 JSON。
 - [ ] P17 README：简介/运行手册/架构/V2-V3 roadmap。
 - [ ] P18 终验：tsc+build 全绿，浏览器全流程走查，push GitHub + tag v0.1。
 
