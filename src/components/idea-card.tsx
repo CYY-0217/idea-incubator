@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import type { Idea, IdeaSource, IdeaStatus } from "@/lib/queries";
 import { timeAgo } from "@/lib/time";
 
-const STATUS_META: Record<
+export const STATUS_META: Record<
   IdeaStatus,
   { label: string; accent: string; dot: string }
 > = {
@@ -28,7 +28,7 @@ const STATUS_META: Record<
   },
 };
 
-const SOURCE_LABEL: Record<IdeaSource, string> = {
+export const SOURCE_LABEL: Record<IdeaSource, string> = {
   keyword: "关键词",
   text: "想法",
   paste: "对话",
