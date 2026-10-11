@@ -51,8 +51,8 @@
 - [x] P03 数据库基建：.env/.env.example、createdb idea_incubator、drizzle.config.ts、空迁移跑通。自查 psql 连通。
       备注：PostgreSQL 18.6（brew，用户 cyy，socket /tmp:5432）；.gitignore 补 `!.env.example` 豁免。
 - [x] P04 schema 五表 + 枚举 + 索引，generate+migrate。自查 psql \dt 五表。
-- [ ] P05 lib/db 单例 + queries 组一：createIdea/listIdeas/getIdea(联表)/updateStatus。自查 tsx 建→查。
-- [ ] P06 queries 组二：addIdeaVersion(事务 v_no+1)/addFollowup/addAttachment/setTags。自查 tsx v_no=1。
+- [x] P05 lib/db 单例 + queries 组一：createIdea/listIdeas/getIdea(联表)/updateStatus。自查 tsx 建→查。
+- [x] P06 queries 组二：addIdeaVersion(事务 v_no+1)/addFollowup/addAttachment/setTags。自查 tsx v_no=1。
 - [ ] P07 lib/time.ts 相对时间工具。自查 tsx 三例。
 - [ ] P08 IdeaCard 卡片组件（类型徽章/五态色条/截断/相对时间）。自查 tsc+假数据。
 - [ ] P09 首页卡片流 + 状态筛选 chips（?status= 驱动）。自查浏览器走查。
