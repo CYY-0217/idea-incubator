@@ -37,9 +37,9 @@ export function StatusSwitcher({
                 else toast.error(res.error);
               })
             }
-            className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs transition-all duration-150 active:scale-95 disabled:opacity-90 ${
+            className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-all duration-150 active:scale-95 disabled:opacity-90 ${
               active
-                ? "border-border bg-secondary text-foreground shadow-sm"
+                ? "border-primary/30 bg-primary/10 text-primary"
                 : "border-border/70 text-muted-foreground hover:-translate-y-px hover:bg-card hover:text-foreground hover:shadow-sm"
             }`}
           >

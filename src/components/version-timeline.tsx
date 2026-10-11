@@ -38,22 +38,19 @@ export function VersionTimeline({ versions }: { versions: IdeaVersion[] }) {
             className="relative animate-in fade-in slide-in-from-left-2 duration-500 [animation-fill-mode:backwards]"
             style={{ animationDelay: `${Math.min(i, 6) * 80}ms` }}
           >
-            <span className="absolute -left-[25px] top-1.5 size-2 rounded-full bg-primary ring-4 ring-background" />
+            <span className="absolute -left-[25px] top-1.5 size-2 rounded-full bg-primary ring-4 ring-primary/15" />
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="font-mono text-[11px] font-medium text-foreground/80">
                 v{v.vNo}
               </span>
-              <Badge
-                variant="outline"
-                className="rounded-md px-1.5 text-[11px] font-normal text-muted-foreground"
-              >
+              <span className="rounded-full bg-secondary px-2 py-0.5 text-[11px] text-muted-foreground">
                 {ORIGIN_LABEL[v.origin] ?? v.origin}
-              </Badge>
+              </span>
               <span className="ml-auto font-mono text-[11px] text-muted-foreground/70">
                 {timeAgo(v.createdAt)}
               </span>
             </div>
-            <div className="mt-2 flex flex-col gap-2.5 rounded-lg border border-border/60 bg-card p-3.5 shadow-card">
+            <div className="mt-2 flex flex-col gap-2.5 rounded-xl border border-border/60 bg-card/85 p-3.5 shadow-card backdrop-blur-sm">
               {FIELDS.map((f) =>
                 typeof p[f.key] === "string" && p[f.key] ? (
                   <div key={f.key} className="flex flex-col gap-0.5">
@@ -71,7 +68,7 @@ export function VersionTimeline({ versions }: { versions: IdeaVersion[] }) {
                   {p.novelty != null && (
                     <Badge
                       variant="outline"
-                      className="rounded-md px-1.5 font-mono text-[11px] font-normal text-orange-600"
+                      className="rounded-full border-transparent bg-primary/10 px-2 font-mono text-[11px] font-normal text-primary"
                     >
                       新颖性 {String(p.novelty)}/5
                     </Badge>
@@ -79,7 +76,7 @@ export function VersionTimeline({ versions }: { versions: IdeaVersion[] }) {
                   {p.feasibility != null && (
                     <Badge
                       variant="outline"
-                      className="rounded-md px-1.5 font-mono text-[11px] font-normal text-sky-600"
+                      className="rounded-full border-transparent bg-sky-500/10 px-2 font-mono text-[11px] font-normal text-sky-600"
                     >
                       可行性 {String(p.feasibility)}/5
                     </Badge>

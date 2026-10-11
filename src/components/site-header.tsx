@@ -2,11 +2,14 @@ import Link from "next/link";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-10 border-b border-border/70 bg-background/85 backdrop-blur-sm">
+    <header className="sticky top-0 z-10 border-b border-border/60 bg-background/60 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
         <div className="flex items-baseline gap-3">
-          <span className="font-mono text-sm tracking-tight text-foreground">
-            Idea Incubator
+          <span className="flex items-baseline gap-2">
+            <span className="size-2 rounded-full bg-primary/70" />
+            <span className="font-mono text-sm tracking-tight text-foreground">
+              Idea Incubator
+            </span>
           </span>
           <span className="hidden text-sm text-muted-foreground sm:inline">
             把模糊想法，养成能落地的样子

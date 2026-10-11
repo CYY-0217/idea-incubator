@@ -104,7 +104,7 @@ export function IdeaInput() {
           toast.success("截图已捕获");
         }
       }}
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-2 rounded-xl border border-border/60 bg-card/85 p-4 shadow-card backdrop-blur-sm"
     >
       <div className="flex items-center gap-1.5" role="tablist" aria-label="输入模式">
         {MODES.map((m) => (
@@ -128,7 +128,7 @@ export function IdeaInput() {
         onChange={(e) => setValue(e.target.value)}
         placeholder={active.placeholder}
         rows={3}
-        className="resize-none bg-card text-sm shadow-card transition-shadow duration-200 focus-visible:shadow-card-hover"
+        className="resize-none border-border/50 bg-background/60 text-sm shadow-none transition-shadow duration-200 focus-visible:shadow-card-hover"
         onKeyDown={(e) => {
           if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
             e.preventDefault();
