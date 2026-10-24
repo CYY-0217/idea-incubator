@@ -23,12 +23,6 @@ export function SiteHeader() {
         <div className="flex items-center gap-4">
           <nav className="flex items-center gap-4 text-sm text-muted-foreground">
             <Link
-              href="/"
-              className="transition-colors hover:text-foreground"
-            >
-              收件箱
-            </Link>
-            <Link
               href="/board"
               className="transition-colors hover:text-foreground"
             >
@@ -49,7 +43,7 @@ export function SiteHeader() {
           </nav>
           <PaletteTrigger />
           <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
-            v1.9
+            v1.10
           </span>
         </div>
       </div>

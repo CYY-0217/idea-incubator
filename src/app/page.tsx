@@ -138,7 +138,7 @@ export default async function Home({
               </span>
             </div>
 
-            <h1 className="page-title max-w-[20ch] text-balance">
+            <h1 className="page-title max-w-[26ch] text-balance">
               {greeting()}。
               <span className="mt-1.5 block text-primary">
                 今天有什么模糊的念头？
@@ -233,8 +233,8 @@ export default async function Home({
           {/* 苗圃概览：数字 + 生长阶段 */}
           <section className="mt-8">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="eyebrow">苗圃概览</h2>
-              <span className="font-mono text-[11px] text-muted-foreground/60">
+              <h2 className="section-title">苗圃概览</h2>
+              <span className="section-note">
                 {overview.total} 颗想法在生长
               </span>
             </div>
@@ -268,8 +268,8 @@ export default async function Home({
             {/* 状态分布条 */}
             <div className="mt-3 rounded-xl border border-border/60 bg-card/55 px-4 py-4 shadow-card backdrop-blur-sm">
               <div className="flex items-baseline justify-between gap-3">
-                <span className="eyebrow">生长阶段</span>
-                <span className="font-mono text-[11px] text-muted-foreground/60">
+                <h3 className="section-title section-title-sm">生长阶段</h3>
+                <span className="section-note">
                   共 {totalForBar}
                 </span>
               </div>
@@ -306,8 +306,8 @@ export default async function Home({
               <div className="flex flex-col gap-3 rounded-xl border border-border/50 bg-card/50 px-4 py-3 backdrop-blur-sm">
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                   <div className="flex items-baseline gap-2">
-                    <h2 className="eyebrow">收件箱</h2>
-                    <span className="font-mono text-[11px] text-muted-foreground/60">
+                    <h2 className="section-title section-title-sm">收件箱</h2>
+                    <span className="section-note">
                       {ideas.length} 条
                     </span>
                   </div>
@@ -408,7 +408,7 @@ export default async function Home({
               <aside className="flex min-w-0 flex-col gap-3 lg:sticky lg:top-20">
                 <div className="rounded-xl border border-border/60 bg-card/70 p-4 shadow-card backdrop-blur-sm">
                   <div className="flex items-baseline justify-between gap-2">
-                    <h2 className="eyebrow">最近动态</h2>
+                    <h2 className="section-title section-title-sm">最近动态</h2>
                     <span className="font-mono text-[10px] text-muted-foreground/50">
                       {overview.recentEvents.length}
                     </span>

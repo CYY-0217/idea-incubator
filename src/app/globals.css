@@ -166,10 +166,42 @@ html {
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* 区块标题：有衬线、有字重、有主色导引条，禁止用 eyebrow 当标题 */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-heading);
+  font-size: 1.28rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+
+.section-title::before {
+  content: "";
+  flex: none;
+  width: 3px;
+  height: 1.05em;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.section-title-sm {
+  font-size: 1.06rem;
+}
+
+.section-note {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
   color: var(--muted-foreground);
 }
 

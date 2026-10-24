@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="eyebrow">
+    <h2 className="section-title section-title-sm">
       {children}
     </h2>
   );
