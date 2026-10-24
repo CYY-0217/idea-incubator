@@ -67,7 +67,7 @@ export function IdeaCard({
             {timeAgo(idea.updatedAt)}
           </span>
         </div>
-        <p className="line-clamp-2 px-4 text-sm leading-relaxed text-foreground/90">
+        <p className="line-clamp-2 px-4 text-base leading-relaxed text-foreground/90">
           {idea.rawText}
         </p>
         {tags.length > 0 && (

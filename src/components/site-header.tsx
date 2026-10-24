@@ -9,7 +9,7 @@ export function SiteHeader() {
         <div className="flex items-baseline gap-3">
           <span className="flex items-baseline gap-2">
             <span className="size-2 rounded-full bg-primary/70" />
-            <span className="font-mono text-sm tracking-tight text-foreground">
+            <span className="font-mono text-base font-medium tracking-tight text-foreground">
               Idea Incubator
             </span>
           </span>
@@ -18,7 +18,7 @@ export function SiteHeader() {
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <nav className="flex items-center gap-3 text-xs text-muted-foreground">
+          <nav className="flex items-center gap-4 text-sm text-muted-foreground">
             <Link
               href="/board"
               className="transition-colors hover:text-foreground"
@@ -39,8 +39,8 @@ export function SiteHeader() {
             </Link>
           </nav>
           <PaletteTrigger />
-          <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
-            v1.6
+          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
+            v1.7
           </span>
         </div>
       </div>

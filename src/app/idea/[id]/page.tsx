@@ -13,13 +13,14 @@ import { StatusSwitcher } from "@/components/status-switcher";
 import { TagEditor } from "@/components/tag-editor";
 import { VersionTimeline } from "@/components/version-timeline";
 import { getIdea, getPanels } from "@/lib/queries";
+import { hasDeepSeekKey } from "@/lib/ai";
 import { timeAgo } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
+    <h2 className="eyebrow">
       {children}
     </h2>
   );
@@ -38,6 +39,7 @@ export default async function IdeaDetailPage({
   if (!detail) notFound();
   const { idea, attachments, versions, followups, tags } = detail;
   const panels = await getPanels(num);
+  const modelReady = hasDeepSeekKey();
   const status = STATUS_META[idea.status];
 
   return (
@@ -63,7 +65,7 @@ export default async function IdeaDetailPage({
             #{idea.id}
           </span>
         </div>
-        <p className="whitespace-pre-wrap font-heading text-[15px] leading-relaxed text-foreground/90">
+        <p className="whitespace-pre-wrap font-heading text-[17px] leading-relaxed text-foreground/90">
           {idea.rawText}
         </p>
       </header>
@@ -81,7 +83,7 @@ export default async function IdeaDetailPage({
       {versions.length === 0 && (
         <section className="flex flex-col gap-3">
           <SectionLabel>展开</SectionLabel>
-          <ExpandPanel ideaId={idea.id} rawText={idea.rawText} source={idea.source} />
+          <ExpandPanel ideaId={idea.id} />
         </section>
       )}
 
@@ -94,6 +96,7 @@ export default async function IdeaDetailPage({
         <SectionLabel>AI 评审团</SectionLabel>
         <PanelSection
           ideaId={idea.id}
+          modelReady={modelReady}
           panels={panels.map((p) => {
             const payload = p.payload as {
               reviews?: Array<{ persona: string; verdict: string; comment: string }>;
@@ -112,6 +115,7 @@ export default async function IdeaDetailPage({
         <SectionLabel>AI 追问</SectionLabel>
         <FollowupPanel
           ideaId={idea.id}
+          modelReady={modelReady}
           followups={followups.map((f) => ({
             id: f.id,
             question: f.question,

@@ -17,7 +17,15 @@ const VERDICT_STYLE: Record<string, string> = {
   放弃: "border-transparent bg-stone-500/10 text-stone-500",
 };
 
-export function PanelSection({ ideaId, panels }: { ideaId: number; panels: PanelRow[] }) {
+export function PanelSection({
+  ideaId,
+  panels,
+  modelReady,
+}: {
+  ideaId: number;
+  panels: PanelRow[];
+  modelReady: boolean;
+}) {
   const [phase, setPhase] = useState<"idle" | "working">("idle");
   const [zcodePrompt, setZcodePrompt] = useState<string | null>(null);
   const [pasteValue, setPasteValue] = useState("");
@@ -91,7 +99,7 @@ export function PanelSection({ ideaId, panels }: { ideaId: number; panels: Panel
         </div>
       )}
 
-      {phase === "idle" && (
+      {phase === "idle" && modelReady && (
         <Button
           size="sm"
           variant="outline"
@@ -102,7 +110,13 @@ export function PanelSection({ ideaId, panels }: { ideaId: number; panels: Panel
         </Button>
       )}
 
-      {zcodePrompt && (
+      {!modelReady && (
+        <p className="text-sm text-muted-foreground">
+          模型通道未接入，评审团暂缓。已归档的评审记录仍可查看。
+        </p>
+      )}
+
+      {modelReady && zcodePrompt && (
         <div className="flex flex-col gap-2">
           <p className="text-xs text-muted-foreground">
             未设置 DEEPSEEK_API_KEY：把 prompt 交给 ZCode，拿回

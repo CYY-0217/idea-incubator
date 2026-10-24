@@ -196,6 +196,23 @@ export async function applyMergedVersionAction(input: {
   return { ok: true, vNo: v.vNo };
 }
 
+export async function saveManualVersionAction(input: {
+  ideaId: number;
+  payload: Record<string, unknown>;
+}): Promise<ActionResult & { vNo?: number }> {
+  const result = expandPayloadSchema.safeParse(input.payload);
+  if (!result.success)
+    return { ok: false, error: formatExpandError(result.error) };
+
+  const v = await addIdeaVersion({
+    ideaId: input.ideaId,
+    payload: result.data,
+    origin: "manual",
+  });
+  revalidatePath(`/idea/${input.ideaId}`);
+  return { ok: true, vNo: v.vNo };
+}
+
 /* ---------- AI 评审团（双通道） ---------- */
 
 export type PanelResult =

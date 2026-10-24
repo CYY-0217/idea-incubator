@@ -106,7 +106,7 @@
 | P29 PWA / P30 移动抽屉 | 缓 | 桌面端尚未用顺 |
 
 ### 修订后的顺序
-1. ✅ P31 站内展开（原清单没有，本次新增：网页内完成"复制 Prompt → 粘贴 JSON → 生成 v1"）
+1. ✅ P31 手动建档（原 P31"复制 Prompt 找 AI"方案作废：不做外部 AI 依赖，改为详情页手动填九字段）
 2. P20 vitest 基建
 3. P32 全库 JSON 导出 / 导入（备份，也是批量喂想法的前置）
 4. P33 原文编辑（改完可重新展开）
@@ -115,4 +115,4 @@
 
 ### 本轮完成记录
 - [x] P19 全局 ⌘K 捕获：手写弹层（复用 radix Dialog，零新依赖），⌘K 唤起 / Esc 关闭 / ⌘↵ 提交，空输入时快捷导航。自查：tsc 全绿 + 浏览器四项走查通过。commit `e4b9117`
-- [x] P31 站内展开：详情页在无版本时显示 ExpandPanel；复制 SYSTEM+USER prompt → 粘贴 AI 返回 JSON → 复用 applyMergedVersionAction 校验落库为 v1。自查：tsc 全绿。
+- [x] P31 手动建档：详情页九字段表单（可选字段留空自动补「待补」），saveManualVersionAction 校验后落成 v1；文案不提外部 AI。自查：tsc 全绿。

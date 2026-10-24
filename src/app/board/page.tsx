@@ -23,8 +23,8 @@ export default async function BoardPage() {
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
       <div className="flex flex-col gap-1">
-        <h1 className="font-heading text-2xl">看板</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="page-title">看板</h1>
+        <p className="page-sub">
           拖动卡片流转状态。从种子到落地，一个想法的流水线。
         </p>
       </div>

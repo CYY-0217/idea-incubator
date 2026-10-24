@@ -17,9 +17,11 @@ type Phase = "idle" | "asking" | "answering" | "merging";
 export function FollowupPanel({
   ideaId,
   followups,
+  modelReady,
 }: {
   ideaId: number;
   followups: FollowupRow[];
+  modelReady: boolean;
 }) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [questions, setQuestions] = useState<string[]>([]);
@@ -128,7 +130,7 @@ export function FollowupPanel({
         </ul>
       )}
 
-      {phase === "idle" && (
+      {phase === "idle" && modelReady && (
         <Button
           size="sm"
           variant="outline"
@@ -139,7 +141,13 @@ export function FollowupPanel({
         </Button>
       )}
 
-      {phase === "answering" && zcodePrompt && (
+      {!modelReady && (
+        <p className="text-sm text-muted-foreground">
+          模型通道未接入，追问暂缓。已有的追问与回答仍可查看。
+        </p>
+      )}
+
+      {modelReady && phase === "answering" && zcodePrompt && (
         <div className="flex flex-col gap-2">
           <p className="text-xs text-muted-foreground">
             未设置 DEEPSEEK_API_KEY：把下面的 prompt 交给 ZCode，拿回
@@ -213,7 +221,7 @@ export function FollowupPanel({
         </div>
       )}
 
-      {phase === "merging" && zcodePrompt && (
+      {modelReady && phase === "merging" && zcodePrompt && (
         <div className="flex flex-col gap-2">
           <p className="text-xs text-muted-foreground">
             把融合 prompt 交给 ZCode，拿回九字段 JSON 粘贴进来，写为 v(n+1)。

@@ -73,7 +73,7 @@ export default async function Home({
     <div className="mx-auto max-w-5xl px-6 py-10">
       {/* 问候区 */}
       <div className="mb-8 flex flex-col gap-1.5">
-        <h1 className="font-heading text-2xl leading-snug">
+        <h1 className="page-title">
           {greeting()}。今天有什么模糊的念头？
         </h1>
         <p className="font-mono text-[11px] tracking-widest text-muted-foreground/70">
@@ -252,7 +252,7 @@ export default async function Home({
             {/* 最近动态 */}
             {overview.recentEvents.length > 0 && (
               <aside className="flex flex-col gap-3 lg:sticky lg:top-20">
-                <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
+                <h2 className="eyebrow">
                   最近动态
                 </h2>
                 <ul className="flex flex-col gap-3">
