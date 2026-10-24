@@ -7,18 +7,27 @@ export function SiteHeader() {
     <header className="sticky top-0 z-10 border-b border-border/60 bg-background/60 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
         <div className="flex items-baseline gap-3">
-          <span className="flex items-baseline gap-2">
+          <Link
+            href="/"
+            className="flex items-baseline gap-2 transition-opacity hover:opacity-70"
+          >
             <span className="size-2 rounded-full bg-primary/70" />
             <span className="font-mono text-base font-medium tracking-tight text-foreground">
               Idea Incubator
             </span>
-          </span>
+          </Link>
           <span className="hidden text-sm text-muted-foreground sm:inline">
             把模糊想法，养成能落地的样子
           </span>
         </div>
         <div className="flex items-center gap-4">
           <nav className="flex items-center gap-4 text-sm text-muted-foreground">
+            <Link
+              href="/"
+              className="transition-colors hover:text-foreground"
+            >
+              收件箱
+            </Link>
             <Link
               href="/board"
               className="transition-colors hover:text-foreground"
@@ -40,7 +49,7 @@ export function SiteHeader() {
           </nav>
           <PaletteTrigger />
           <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
-            v1.7
+            v1.8
           </span>
         </div>
       </div>
