@@ -15,6 +15,13 @@
       "when": 1791761388409,
       "tag": "0001_giant_carnage",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792808364532,
+      "tag": "0002_lively_chameleon",
+      "breakpoints": true
     }
   ]
 }

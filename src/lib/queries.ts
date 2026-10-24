@@ -4,6 +4,7 @@ import { db } from "./db";
 import {
   attachments,
   followups,
+  ideaLinks,
   ideaSource,
   ideaStatus,
   ideaTags,
@@ -277,10 +278,15 @@ export type GraphData = {
     status: IdeaStatus;
     versionCount: number;
   }>;
-  edges: Array<{ a: number; b: number; score: number }>;
+  edges: Array<{
+    a: number;
+    b: number;
+    score: number;
+    kind: "similar" | "manual";
+  }>;
 };
 
-/** 全部想法为节点、活跃想法之间的 Jaccard 相似度为边 */
+/** 全部想法为节点；Jaccard 相似度为虚线边，手动连线为实线边（手动优先） */
 export async function getGraph(threshold = 0.15): Promise<GraphData> {
   const all = await listIdeas();
   const versionMap = await versionCountsForIdeas(all.map((i) => i.id));
@@ -296,18 +302,55 @@ export async function getGraph(threshold = 0.15): Promise<GraphData> {
       i.status === "seed" || i.status === "shaping" || i.status === "proving",
   );
   const grams = active.map((i) => ({ id: i.id, set: bigrams(i.rawText) }));
-  const edges: GraphData["edges"] = [];
+  const edgeMap = new Map<string, GraphData["edges"][number]>();
   for (let i = 0; i < grams.length; i++) {
     for (let j = i + 1; j < grams.length; j++) {
       const score = jaccard(grams[i].set, grams[j].set);
       if (score >= threshold) {
-        edges.push({ a: grams[i].id, b: grams[j].id, score });
+        const a = Math.min(grams[i].id, grams[j].id);
+        const b = Math.max(grams[i].id, grams[j].id);
+        edgeMap.set(`${a}-${b}`, { a, b, score, kind: "similar" });
       }
     }
   }
-  edges.sort((x, y) => y.score - x.score);
+
+  const manualRows = await db.select().from(ideaLinks);
+  const nodeIds = new Set(all.map((i) => i.id));
+  for (const row of manualRows) {
+    if (!nodeIds.has(row.fromId) || !nodeIds.has(row.toId)) continue;
+    const a = Math.min(row.fromId, row.toId);
+    const b = Math.max(row.fromId, row.toId);
+    edgeMap.set(`${a}-${b}`, { a, b, score: 1, kind: "manual" });
+  }
+
+  const edges = [...edgeMap.values()].sort((x, y) => {
+    if (x.kind !== y.kind) return x.kind === "manual" ? -1 : 1;
+    return y.score - x.score;
+  });
 
   return { nodes, edges };
+}
+
+/* ---------- 手动连线 ---------- */
+
+export async function addManualLink(fromId: number, toId: number) {
+  const a = Math.min(fromId, toId);
+  const b = Math.max(fromId, toId);
+  if (a === b) return null;
+  const [row] = await db
+    .insert(ideaLinks)
+    .values({ fromId: a, toId: b })
+    .onConflictDoNothing()
+    .returning();
+  return row ?? null;
+}
+
+export async function removeManualLink(fromId: number, toId: number) {
+  const a = Math.min(fromId, toId);
+  const b = Math.max(fromId, toId);
+  await db
+    .delete(ideaLinks)
+    .where(and(eq(ideaLinks.fromId, a), eq(ideaLinks.toId, b)));
 }
 
 /* ---------- 首页概览 ---------- */

@@ -49,7 +49,7 @@ export function SiteHeader() {
           </nav>
           <PaletteTrigger />
           <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
-            v1.8
+            v1.9
           </span>
         </div>
       </div>

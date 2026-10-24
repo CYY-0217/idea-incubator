@@ -127,6 +127,27 @@ export const ideaTags = pgTable(
   ],
 );
 
+// 手动连线：用户在图谱上亲手建立的关系，与 Jaccard 自动边并存
+export const ideaLinks = pgTable(
+  "idea_links",
+  {
+    id: serial("id").primaryKey(),
+    fromId: integer("from_id")
+      .notNull()
+      .references(() => ideas.id, { onDelete: "cascade" }),
+    toId: integer("to_id")
+      .notNull()
+      .references(() => ideas.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("idea_links_pair_idx").on(t.fromId, t.toId),
+    index("idea_links_from_idx").on(t.fromId),
+  ],
+);
+
 // AI 评审团：四角色（产品/技术/用户/投资）对一次想法的辩论记录
 export const panelReviews = pgTable(
   "panel_reviews",

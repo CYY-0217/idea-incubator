@@ -13,8 +13,10 @@ import {
   addAttachment,
   addFollowup,
   addIdeaVersion,
+  addManualLink,
   addPanelReview,
   getIdea,
+  removeManualLink,
   setTags,
   updateStatus,
   type IdeaStatus,
@@ -211,6 +213,27 @@ export async function saveManualVersionAction(input: {
   });
   revalidatePath(`/idea/${input.ideaId}`);
   return { ok: true, vNo: v.vNo };
+}
+
+/* ---------- 图谱手动连线 ---------- */
+
+export async function addLinkAction(input: {
+  fromId: number;
+  toId: number;
+}): Promise<ActionResult> {
+  if (input.fromId === input.toId) return { ok: false, error: "不能连自己" };
+  await addManualLink(input.fromId, input.toId);
+  revalidatePath("/graph");
+  return { ok: true };
+}
+
+export async function removeLinkAction(input: {
+  a: number;
+  b: number;
+}): Promise<ActionResult> {
+  await removeManualLink(input.a, input.b);
+  revalidatePath("/graph");
+  return { ok: true };
 }
 
 /* ---------- AI 评审团（双通道） ---------- */
