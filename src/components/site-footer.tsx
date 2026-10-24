@@ -15,7 +15,7 @@ export function SiteFooter() {
             GitHub
           </a>
           {" · "}
-          v1.5
+          v1.6
         </p>
       </div>
     </footer>

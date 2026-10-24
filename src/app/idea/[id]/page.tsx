@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AttachmentPanel } from "@/components/attachment-panel";
+import { ExpandPanel } from "@/components/expand-panel";
 import { FollowupPanel } from "@/components/followup-panel";
 import {
   SOURCE_LABEL,
@@ -76,6 +77,13 @@ export default async function IdeaDetailPage({
         <SectionLabel>状态</SectionLabel>
         <StatusSwitcher id={idea.id} current={idea.status} />
       </section>
+
+      {versions.length === 0 && (
+        <section className="flex flex-col gap-3">
+          <SectionLabel>展开</SectionLabel>
+          <ExpandPanel ideaId={idea.id} rawText={idea.rawText} source={idea.source} />
+        </section>
+      )}
 
       <section className="flex flex-col gap-3">
         <SectionLabel>演化时间线</SectionLabel>

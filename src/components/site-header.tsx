@@ -40,7 +40,7 @@ export function SiteHeader() {
           </nav>
           <PaletteTrigger />
           <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
-            v1.4
+            v1.6
           </span>
         </div>
       </div>
