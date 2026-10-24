@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { PaletteTrigger } from "@/components/command-palette";
+
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-10 border-b border-border/60 bg-background/60 backdrop-blur-md">
@@ -36,8 +38,9 @@ export function SiteHeader() {
               周回顾
             </Link>
           </nav>
+          <PaletteTrigger />
           <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
-            v0
+            v1.4
           </span>
         </div>
       </div>
