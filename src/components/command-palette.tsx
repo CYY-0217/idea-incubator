@@ -15,13 +15,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import type { IdeaSource } from "@/lib/queries";
 
-const MODES: Array<{ value: IdeaSource; label: string; hint: string }> = [
-  { value: "keyword", label: "关键词", hint: "一个词也能收" },
-  { value: "text", label: "想法", hint: "一句话说清" },
-  { value: "paste", label: "对话粘贴", hint: "原样粘进来" },
-];
+const PLACEHOLDER = "一个词、一句话、一段对话——想记什么就写什么";
 
 const NAV = [
   { href: "/board", label: "看板", icon: LayoutGrid },
@@ -49,7 +44,6 @@ export function PaletteTrigger() {
 export function CommandPalette() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<IdeaSource>("text");
   const [value, setValue] = useState("");
   const [pending, startTransition] = useTransition();
   const areaRef = useRef<HTMLTextAreaElement>(null);
@@ -84,7 +78,7 @@ export function CommandPalette() {
       return;
     }
     startTransition(async () => {
-      const res = await createIdeaAction({ rawText: raw, source: mode });
+      const res = await createIdeaAction({ rawText: raw, source: "text" });
       if (!res.ok) {
         toast.error(res.error);
         return;
@@ -94,7 +88,7 @@ export function CommandPalette() {
       setOpen(false);
       router.refresh();
     });
-  }, [mode, router, value]);
+  }, [router, value]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -107,24 +101,6 @@ export function CommandPalette() {
           随时记下一闪而过的念头，先收进来，展开留给之后
         </DialogDescription>
 
-        <div className="flex gap-1.5">
-          {MODES.map((m) => (
-            <button
-              key={m.value}
-              type="button"
-              onClick={() => setMode(m.value)}
-              className={`rounded-full border px-2.5 py-1 text-[11px] transition-colors ${
-                mode === m.value
-                  ? "border-primary/50 bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:text-foreground"
-              }`}
-              title={m.hint}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
-
         <Textarea
           ref={areaRef}
           value={value}
@@ -135,13 +111,7 @@ export function CommandPalette() {
               submit();
             }
           }}
-          placeholder={
-            mode === "keyword"
-              ? "比如：番茄计时"
-              : mode === "paste"
-                ? "把对话原样粘进来…"
-                : "比如：记录每个番茄钟在做什么，周末生成专注报告"
-          }
+          placeholder={PLACEHOLDER}
           className="min-h-28 resize-none"
         />
 

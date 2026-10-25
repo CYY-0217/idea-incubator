@@ -7,32 +7,12 @@ import { toast } from "sonner";
 import { createIdeaAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import type { IdeaSource } from "@/lib/queries";
 
-const MODES: Array<{
-  value: IdeaSource;
-  label: string;
-  placeholder: string;
-}> = [
-  { value: "keyword", label: "关键词", placeholder: "比如：番茄计时" },
-  {
-    value: "text",
-    label: "想法",
-    placeholder:
-      "比如：记录每个番茄钟在做什么，周末自动生成一份专注报告的小工具",
-  },
-  {
-    value: "paste",
-    label: "对话粘贴",
-    placeholder:
-      "把和朋友聊起某个点子的对话原样粘进来，AI 会先提炼核心想法再展开",
-  },
-];
+const PLACEHOLDER = "一个词、一句话、一段对话——想记什么就写什么";
 
 type Pending = { path: string | null; preview: string; uploading: boolean };
 
 export function IdeaInput() {
-  const [mode, setMode] = useState<IdeaSource>("text");
   const [value, setValue] = useState("");
   const [pendingList, setPendingList] = useState<Pending[]>([]);
   const [pending, startTransition] = useTransition();
@@ -75,7 +55,7 @@ export function IdeaInput() {
     }
     const paths = pendingList.map((p) => p.path).filter((p): p is string => !!p);
     startTransition(async () => {
-      const res = await createIdeaAction({ rawText, source: mode, attachmentPaths: paths });
+      const res = await createIdeaAction({ rawText, source: "text", attachmentPaths: paths });
       if (res.ok) {
         setValue("");
         setPendingList([]);
@@ -85,8 +65,6 @@ export function IdeaInput() {
       }
     });
   }
-
-  const active = MODES.find((m) => m.value === mode)!;
 
   return (
     <form
@@ -106,27 +84,10 @@ export function IdeaInput() {
       }}
       className="flex flex-col gap-2 rounded-xl border border-border/60 bg-card/85 p-4 shadow-card backdrop-blur-sm"
     >
-      <div className="flex items-center gap-1.5" role="tablist" aria-label="输入模式">
-        {MODES.map((m) => (
-          <button
-            key={m.value}
-            type="button"
-            aria-pressed={m.value === mode}
-            onClick={() => setMode(m.value)}
-            className={`rounded-md border px-2.5 py-1 text-xs transition-all duration-150 active:scale-95 ${
-              m.value === mode
-                ? "border-transparent bg-primary text-primary-foreground shadow-sm"
-                : "border-border/70 text-muted-foreground hover:-translate-y-px hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm"
-            }`}
-          >
-            {m.label}
-          </button>
-        ))}
-      </div>
       <Textarea
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={active.placeholder}
+        placeholder={PLACEHOLDER}
         rows={3}
         className="resize-none border-border/50 bg-background/60 text-sm shadow-none transition-shadow duration-200 focus-visible:shadow-card-hover"
         onKeyDown={(e) => {
