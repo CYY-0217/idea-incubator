@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>首页设计稿 v1 · Idea Incubator</title>
+<style>
+  :root{
+    --bg:#f7fbfa; --card:#ffffff; --fg:#1d2b2a; --muted:#6b7f7c;
+    --primary:#2f9e8f; --primary-soft:#e6f4f1; --line:#dceae6;
+    --amber:#f59e0b; --sky:#0ea5e9; --violet:#8b5cf6; --stone:#a8a29e;
+    --serif:"Songti SC","Noto Serif SC","STSong",Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC",sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:
+      radial-gradient(42rem 30rem at 10% -8%, rgba(120,200,185,.18), transparent 70%),
+      radial-gradient(36rem 26rem at 92% -6%, rgba(150,210,185,.16), transparent 70%),
+      var(--bg);
+    color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.6;font-size:17px;
+  }
+  .note{
+    background:#1d2b2a;color:#dff3ee;font-family:var(--mono);font-size:12px;
+    text-align:center;padding:8px 16px;letter-spacing:.06em;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header{border-bottom:1px solid var(--line);background:rgba(255,255,255,.72);backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:17px;font-weight:600}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+  .links{display:flex;gap:22px;font-size:15px;color:var(--muted)}
+  .links span{color:var(--fg)}
+
+  /* Hero */
+  .hero{
+    margin-top:36px;border:1px solid var(--line);border-radius:20px;background:var(--card);
+    overflow:hidden;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+  }
+  .hero-copy{padding:56px 48px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:14px;align-items:center}
+  .eyebrow i{display:block;width:40px;height:1px;background:var(--line)}
+  h1{font-family:var(--serif);font-size:44px;line-height:1.18;letter-spacing:-.01em;margin:22px 0 0;font-weight:600}
+  h1 em{font-style:normal;color:var(--primary);display:block;margin-top:6px}
+  .hero-copy p{font-size:17px;color:var(--muted);max-width:34em;margin:18px 0 0}
+  .today{margin-top:26px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .today b{color:var(--primary);font-weight:600}
+  .hero-art{position:relative;background:linear-gradient(180deg,#f3fbf8,#ffffff)}
+  .hero-art svg{display:block;width:100%;height:100%}
+
+  /* Section title */
+  section{margin-top:64px}
+  .sec-head{display:flex;align-items:center;gap:12px;justify-content:space-between}
+  h2{font-family:var(--serif);font-size:22px;font-weight:600;margin:0;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:3px;height:22px;border-radius:99px;background:var(--primary)}
+  .sec-note{font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .sec-sub{color:var(--muted);font-size:15px;margin:10px 0 0}
+
+  /* Criteria */
+  .criteria{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:22px}
+  .crit{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:22px}
+  .crit .icon{width:34px;height:34px;border-radius:10px;background:var(--primary-soft);display:grid;place-items:center;color:var(--primary);font-size:16px}
+  .crit h3{font-family:var(--serif);font-size:18px;margin:14px 0 6px;font-weight:600}
+  .crit p{margin:0;color:var(--muted);font-size:14px;line-height:1.65}
+
+  /* Process */
+  .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:26px;position:relative}
+  .steps::before{content:"";position:absolute;left:6%;right:6%;top:22px;height:2px;background:var(--line)}
+  .step{position:relative;padding:0 14px;text-align:center}
+  .step .num{position:relative;z-index:1;width:44px;height:44px;margin:0 auto;border-radius:50%;background:var(--card);border:2px solid var(--primary);color:var(--primary);display:grid;place-items:center;font-family:var(--mono);font-size:13px}
+  .step.done .num{background:var(--primary);color:#fff}
+  .step h3{font-family:var(--serif);font-size:18px;margin:14px 0 4px;font-weight:600}
+  .step p{margin:0;color:var(--muted);font-size:13px}
+  .step .out{margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--primary)}
+
+  /* Nursery */
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+  .stat{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:18px}
+  .stat .k{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em}
+  .stat .v{font-family:var(--mono);font-size:30px;line-height:1.2;margin-top:6px}
+  .stage{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:18px}
+  .bar{height:8px;border-radius:99px;overflow:hidden;background:#edf3f1;display:flex;margin-top:12px}
+  .bar i{display:block;height:100%}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted);font-family:var(--mono)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .legend b{width:7px;height:7px;border-radius:50%;display:block}
+  .hint{margin-top:14px;border-left:2px solid var(--primary);padding:8px 0 8px 14px;color:var(--muted);font-size:14px}
+  .hint strong{color:var(--fg);font-weight:600}
+
+  /* Input + cards */
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 268px;gap:32px;align-items:start}
+  .composer{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:16px}
+  .composer .box{border:1px solid var(--line);border-radius:10px;background:#fbfdfc;color:var(--muted);padding:16px;font-size:15px;min-height:92px}
+  .composer .row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+  .composer .meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .btn{background:var(--primary);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-size:14px;font-family:var(--sans)}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+  .idea{border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:12px;background:var(--card);padding:16px}
+  .idea .top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .idea .st{display:flex;align-items:center;gap:6px}
+  .idea .st b{width:7px;height:7px;border-radius:50%;background:var(--amber);display:block}
+  .idea p{margin:10px 0 0;font-size:15px;line-height:1.6}
+  .aside{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:18px}
+  .aside h3{font-family:var(--serif);font-size:17px;margin:0 0 12px;font-weight:600}
+  .feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--muted)}
+  .feed li{display:flex;gap:8px}
+  .feed i{width:6px;height:6px;border-radius:50%;background:var(--primary);margin-top:7px;flex:none}
+  .feed b{color:var(--fg);font-weight:500}
+  footer{margin:72px 0 40px;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;color:var(--muted);font-size:13px;font-family:var(--mono)}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr}
+    .hero-copy{padding:36px 28px}
+    h1{font-size:34px}
+    .criteria{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr;gap:22px}
+    .steps::before{display:none}
+    .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .layout{grid-template-columns:1fr}
+    .cards{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="note">设计稿 v1 · 静态预览，不与线上页面相连</div>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span>Idea Incubator</div>
+    <div class="links"><span>看板</span><span>图谱</span><span>周回顾</span><span>⌘K 捕获</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- ① HERO -->
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">Idea incubator <i></i> 10月25日 · 周日</div>
+      <h1>把模糊的念头，<em>孵成能落地的东西。</em></h1>
+      <p>不是收藏灵感。每周挑一个，拆开、试一次，再决定继续还是放下。</p>
+      <div class="today"><b>3</b> 颗在生长 · <b>1</b> 颗待拆 · <b>0</b> 颗待试</div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 420 340" role="img" aria-label="种子到树的生长插画">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#bfe6dc" stop-opacity=".75"/>
+            <stop offset="100%" stop-color="#bfe6dc" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#4fb3a2"/>
+            <stop offset="100%" stop-color="#7fd1bf"/>
+          </linearGradient>
+        </defs>
+        <circle cx="250" cy="140" r="120" fill="url(#glow)"/>
+        <path d="M60 262h320" stroke="#d8e9e4" stroke-width="2" stroke-linecap="round"/>
+        <!-- seed -->
+        <ellipse cx="120" cy="255" rx="11" ry="7" fill="#e8c39a" transform="rotate(-18 120 255)"/>
+        <!-- sprout -->
+        <path d="M215 258c0-22 0-38 0-52" stroke="#5fae8f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M215 218c-18-2-26-14-26-26 14 0 24 8 26 26z" fill="url(#leaf)"/>
+        <path d="M215 228c16-2 24-12 24-24-13 0-22 8-24 24z" fill="url(#leaf)" opacity=".85"/>
+        <!-- tree -->
+        <path d="M330 258v-58" stroke="#b08a67" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="330" cy="172" r="30" fill="#8fd0bf" opacity=".9"/>
+        <circle cx="305" cy="188" r="22" fill="#a5ddcb" opacity=".9"/>
+        <circle cx="355" cy="190" r="20" fill="#7cc4b1" opacity=".9"/>
+        <!-- dashed path -->
+        <path d="M132 250c40-10 56-38 80-48" stroke="#9fc9bd" stroke-width="1.5" stroke-dasharray="4 5" fill="none"/>
+        <path d="M232 240c40-4 62-30 86-36" stroke="#9fc9bd" stroke-width="1.5" stroke-dasharray="4 5" fill="none"/>
+        <text x="120" y="292" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#7b928d">种子</text>
+        <text x="215" y="292" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#7b928d">嫩芽</text>
+        <text x="330" y="292" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#7b928d">长成</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ② 判断标准 -->
+  <section>
+    <div class="sec-head"><h2>不是每个念头都值得养。先过这三道。</h2></div>
+    <div class="criteria">
+      <div class="crit">
+        <div class="icon">人</div>
+        <h3>有人真的需要</h3>
+        <p>说得出是谁、在什么场景下会用它。说不出来，就先当种子放着。</p>
+      </div>
+      <div class="crit">
+        <div class="icon">步</div>
+        <h3>今晚能试第一步</h3>
+        <p>第一步必须小到 1–2 个晚上。大到一周，说明还没拆够。</p>
+      </div>
+      <div class="crit">
+        <div class="icon">叉</div>
+        <h3>和旧念头的关系清楚</h3>
+        <p>是新的、是延伸、还是重复。重复的应该合并，不是再养一颗。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 四道工序 -->
+  <section>
+    <div class="sec-head"><h2>孵化不是打鸡血，是四道工序。</h2><span class="sec-note">seed → shaping → proving → shipped</span></div>
+    <div class="steps">
+      <div class="step done"><div class="num">01</div><h3>播种</h3><p>原样收进来，允许说不清</p><div class="out">种子</div></div>
+      <div class="step"><div class="num">02</div><h3>拆解</h3><p>写成九字段档案，四问能答</p><div class="out">v1</div></div>
+      <div class="step"><div class="num">03</div><h3>试种</h3><p>真的做一次最小第一步</p><div class="out">v2+</div></div>
+      <div class="step"><div class="num">04</div><h3>定级</h3><p>落地 / 继续 / 搁置，主动选</p><div class="out">状态</div></div>
+    </div>
+  </section>
+
+  <!-- ④ 苗圃 -->
+  <section>
+    <div class="sec-head"><h2>我的苗圃</h2><span class="sec-note">3 颗在生长</span></div>
+    <div class="stats">
+      <div class="stat"><div class="k">入箱</div><div class="v">3</div></div>
+      <div class="stat"><div class="k">本周新增</div><div class="v">3</div></div>
+      <div class="stat"><div class="k">已拆解</div><div class="v">0</div></div>
+      <div class="stat"><div class="k">已落地</div><div class="v">0</div></div>
+    </div>
+    <div class="stage">
+      <div class="legend" style="margin-top:0">
+        <span><b style="background:var(--amber)"></b>种子 3</span>
+        <span><b style="background:var(--sky)"></b>展开中 0</span>
+        <span><b style="background:var(--primary)"></b>推进中 0</span>
+        <span><b style="background:var(--stone)"></b>搁置 0</span>
+        <span><b style="background:var(--violet)"></b>落地 0</span>
+      </div>
+      <div class="bar"><i style="width:100%;background:var(--amber)"></i></div>
+      <div class="hint"><strong>本周有 1 颗停在「种子」超过 14 天。</strong> 建议拆一次，或主动搁置。</div>
+    </div>
+  </section>
+
+  <!-- ⑤ 输入 + 卡片 -->
+  <section>
+    <div class="sec-head"><h2>现在要孵哪一个？</h2><span class="sec-note">按待处理排序</span></div>
+    <div class="layout" style="margin-top:18px">
+      <div>
+        <div class="composer">
+          <div class="box">一个词、一句话、一段对话——想记什么就写什么</div>
+          <div class="row">
+            <span class="meta">⌘/Ctrl + ↩ 发送 · 可粘贴截图</span>
+            <button class="btn">扔进收件箱</button>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="idea">
+            <div class="top"><span class="st"><b></b>种子</span><span>15 分钟前</span></div>
+            <p>想要早起但是没有</p>
+          </div>
+          <div class="idea">
+            <div class="top"><span class="st"><b style="background:var(--sky)"></b>展开中</span><span>2 天前</span></div>
+            <p>给独立开发者的一页式项目交接模板</p>
+          </div>
+        </div>
+      </div>
+      <aside class="aside">
+        <h3>最近动态</h3>
+        <ul class="feed">
+          <li><i></i><span><b>想要早起但是没有</b> 扔进了收件箱</span></li>
+          <li><i></i><span>「交接模板」新增 <b>v1</b> 档案</span></li>
+          <li><i></i><span>本周回顾已生成</span></li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <span>Idea Incubator · 设计稿 v1</span>
+    <span>对齐 docs/homepage-design-v1.md</span>
+  </footer>
+</main>
+</body>
+</html>
